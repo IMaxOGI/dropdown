@@ -3,12 +3,13 @@ import './Dropdown.css';
 
 interface DropdownProps {
   options: string[];
+  title?: string;
   customSearch?: (query: string) => Promise<string[]> | string[];
   renderOption?: (option: string) => React.ReactNode;
   renderSelectedOption?: (selectedOption: string) => React.ReactNode;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ options, customSearch, renderOption, renderSelectedOption }) => {
+const Dropdown: React.FC<DropdownProps> = ({ options, title, customSearch, renderOption, renderSelectedOption }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [filteredOptions, setFilteredOptions] = useState(options);
@@ -37,20 +38,21 @@ const Dropdown: React.FC<DropdownProps> = ({ options, customSearch, renderOption
         setFilteredOptions(result);
       }
     } else {
-      setFilteredOptions(
-        options.filter(option => option.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
+      setFilteredOptions(options.filter((option) => option.toLowerCase().includes(searchQuery.toLowerCase())));
     }
   }, [searchQuery, options, customSearch]);
 
-  const toggleDropdown = () => setIsOpen(prev => !prev);
+  const toggleDropdown = () => setIsOpen((prev) => !prev);
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false);
   };
 
   return (
-    <div className="dropdown" ref={dropdownRef}>
+    <div
+      className="dropdown"
+      ref={dropdownRef}
+    >
       <div
         className={`dropdown-header ${isOpen ? 'open' : ''}`}
         onClick={toggleDropdown}
@@ -60,7 +62,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, customSearch, renderOption
           ? renderSelectedOption
             ? renderSelectedOption(selectedOption)
             : selectedOption
-          : 'Выберите опцию'}
+          : title || 'Оберіть ваше місто'}
         <span className={`dropdown-arrow ${isOpen ? 'open' : ''}`}>&#9660;</span>
       </div>
       {isOpen && (
@@ -68,12 +70,12 @@ const Dropdown: React.FC<DropdownProps> = ({ options, customSearch, renderOption
           <input
             type="text"
             className="dropdown-search"
-            placeholder="Поиск..."
+            placeholder="Пошук..."
             value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <ul className="dropdown-options">
-            {filteredOptions.map(option => (
+            {filteredOptions.map((option) => (
               <li
                 key={option}
                 className="dropdown-option"
