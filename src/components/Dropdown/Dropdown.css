@@ -42,7 +42,7 @@
 }
 
 .dropdown-search {
-  width: calc(100% - 50px);
+  width: calc(100% - 30px);
   margin: var(--dropdown-search-margin);
   padding: var(--dropdown-search-padding);
   border: var(--dropdown-search-border);

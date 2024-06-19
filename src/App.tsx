@@ -27,6 +27,13 @@ const App: React.FC = () => {
         renderSelectedOption={(selectedOption) => <div style={{ color: 'blue' }}>{selectedOption}</div>}
         renderOption={(option) => <div style={{ color: 'blue' }}>{option}</div>}
       />
+      <Dropdown
+        options={options2}
+        customSearch={async (query) => {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          return options.filter((option) => option.toLowerCase().includes(query.toLowerCase()));
+        }}
+      />
     </div>
   );
 };
