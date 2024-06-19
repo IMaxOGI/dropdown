@@ -20,12 +20,35 @@ const Dropdown: React.FC<DropdownProps> = ({ options, title, customSearch, rende
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        setSearchQuery('');
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setIsOpen(false);
+        setSearchQuery('');
+      }
+    };
+
+    const handleWindowBlur = () => {
+      setIsOpen(false);
+      setSearchQuery('');
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('blur', handleWindowBlur);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('blur', handleWindowBlur);
     };
   }, []);
 
@@ -42,10 +65,17 @@ const Dropdown: React.FC<DropdownProps> = ({ options, title, customSearch, rende
     }
   }, [searchQuery, options, customSearch]);
 
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
+  const toggleDropdown = () => {
+    setIsOpen((prev) => !prev);
+    if (isOpen) {
+      setSearchQuery('');
+    }
+  };
+
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false);
+    setSearchQuery('');
   };
 
   return (

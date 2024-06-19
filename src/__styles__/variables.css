@@ -1,0 +1,26 @@
+:root {
+  --dropdown-max-width: 295px;
+  --dropdown-padding: 12px 16px;
+  --dropdown-border-radius: 8px;
+  --dropdown-border-color: #d1d5db;
+  --dropdown-border-color-open: #666;
+  --dropdown-background: #f9fafb;
+  --dropdown-font-size: 14px;
+  --dropdown-color: #999;
+  --dropdown-font-weight: 400;
+  --dropdown-body-background: white;
+  --dropdown-body-z-index: 1000;
+  --dropdown-body-color: #6b7280;
+  --dropdown-search-margin: 10px;
+  --dropdown-search-padding: 5px;
+  --dropdown-search-border: 1px solid rgba(209, 213, 219, 0.6);
+  --dropdown-search-background: rgba(249, 250, 251, 0.6);
+  --dropdown-search-border-radius: 6px;
+  --dropdown-search-focus-border: 1px solid #3b82f6;
+  --dropdown-option-padding: 10px;
+  --dropdown-option-hover-background: #f5f5f5;
+  --dropdown-arrow-margin-left: 10px;
+  --dropdown-arrow-transition: transform 0.3s;
+  --dropdown-arrow-color: black;
+  --dropdown-arrow-open-transform: rotate(180deg);
+}
