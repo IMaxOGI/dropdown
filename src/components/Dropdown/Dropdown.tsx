@@ -1,5 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import './Dropdown.css';
+import useOutsideClick from './hooks/useOutsideClick';
+import useVisibilityChange from './hooks/useVisibilityChange';
+import useFilterOptions from './hooks/useFilterOptions';
 
 interface DropdownProps {
   options: string[];
@@ -12,58 +15,20 @@ interface DropdownProps {
 const Dropdown: React.FC<DropdownProps> = ({ options, title, customSearch, renderOption, renderSelectedOption }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [filteredOptions, setFilteredOptions] = useState(options);
   const [searchQuery, setSearchQuery] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-        setSearchQuery('');
-      }
-    };
+  useOutsideClick(dropdownRef, () => {
+    setIsOpen(false);
+    setSearchQuery('');
+  });
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  useVisibilityChange(() => {
+    setIsOpen(false);
+    setSearchQuery('');
+  });
 
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        setIsOpen(false);
-        setSearchQuery('');
-      }
-    };
-
-    const handleWindowBlur = () => {
-      setIsOpen(false);
-      setSearchQuery('');
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('blur', handleWindowBlur);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('blur', handleWindowBlur);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (customSearch) {
-      const result = customSearch(searchQuery);
-      if (result instanceof Promise) {
-        result.then(setFilteredOptions);
-      } else {
-        setFilteredOptions(result);
-      }
-    } else {
-      setFilteredOptions(options.filter((option) => option.toLowerCase().includes(searchQuery.toLowerCase())));
-    }
-  }, [searchQuery, options, customSearch]);
+  const filteredOptions = useFilterOptions(options, searchQuery, customSearch);
 
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
